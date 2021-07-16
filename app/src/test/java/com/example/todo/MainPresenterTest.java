@@ -2,28 +2,40 @@ package com.example.todo;
 
 import com.example.todo.models.ToDo;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+
 public class MainPresenterTest {
 
-    private MainPresenter subject = new MainPresenter();
+    private MainPresenter subject;
+    private Persistence mockPersistence;
+
+    @Before
+    public void setUp() throws Exception {
+        mockPersistence = mock(Persistence.class);
+        subject = new MainPresenter(mockPersistence);
+    }
 
     @Test
     public void fetchList_retrievesSavedToDos() {
+        List<ToDo> expectedToDos = asList(
+                new ToDo("Pick up peanuts"),
+                new ToDo("Pick up cheese"),
+                new ToDo("Pick up eggs")
+        );
+        when(mockPersistence.getSavedTodos()).thenReturn(expectedToDos);
+
         List<ToDo> todos = subject.fetchList();
 
         assertThat(todos).hasSize(3);
-        assertThat(todos.get(0).getText()).isEqualTo("Pick up milk");
-        assertThat(todos.get(1).getText()).isEqualTo("Pick up cheese");
-        assertThat(todos.get(2).getText()).isEqualTo("Pick up eggs");
+        assertThat(todos).isEqualTo(expectedToDos);
     }
 }
