@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import com.example.todo.models.ToDo;
+import com.example.todo.persistence.Persistence;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -37,5 +39,13 @@ public class MainPresenterTest {
 
         assertThat(todos).hasSize(3);
         assertThat(todos).isEqualTo(expectedToDos);
+    }
+
+    @Test
+    public void addTodo_addsItemToList() {
+        ToDo catFood = new ToDo("Pick up cat food");
+        subject.addToDo(catFood, null);
+
+       verify(mockPersistence).addToDo(catFood, null);
     }
 }
