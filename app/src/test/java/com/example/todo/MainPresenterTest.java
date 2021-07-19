@@ -21,7 +21,7 @@ public class MainPresenterTest {
     private Persistence mockPersistence;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockPersistence = mock(Persistence.class);
         subject = new MainPresenter(mockPersistence);
     }
@@ -33,9 +33,9 @@ public class MainPresenterTest {
                 new ToDo("Pick up cheese"),
                 new ToDo("Pick up eggs")
         );
-        when(mockPersistence.getSavedTodos()).thenReturn(expectedToDos);
+        when(mockPersistence.getSavedTodos(null)).thenReturn(expectedToDos);
 
-        List<ToDo> todos = subject.fetchList();
+        List<ToDo> todos = subject.fetchList(null);
 
         assertThat(todos).hasSize(3);
         assertThat(todos).isEqualTo(expectedToDos);
@@ -44,8 +44,8 @@ public class MainPresenterTest {
     @Test
     public void addTodo_addsItemToList() {
         ToDo catFood = new ToDo("Pick up cat food");
-        subject.addToDo(catFood, null);
+        subject.addToDo(null, catFood);
 
-       verify(mockPersistence).addToDo(catFood, null);
+       verify(mockPersistence).addToDo(null, catFood);
     }
 }

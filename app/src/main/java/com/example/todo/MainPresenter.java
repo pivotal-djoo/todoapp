@@ -14,11 +14,11 @@ public class MainPresenter {
         this.persistence = persistence;
     }
 
-    public List<ToDo> fetchList() {
-        return persistence.getSavedTodos();
+    public List<ToDo> fetchList(Context context) {
+        return persistence.getSavedTodos(context);
     }
 
-    public void addToDo(ToDo newItem, Context context) {
-        persistence.addToDo(newItem, context);
+    public void addToDo(Context context, ToDo newItem) {
+        persistence.addToDo(context, newItem);
     }
 }
