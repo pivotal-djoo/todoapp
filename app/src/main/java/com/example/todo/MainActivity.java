@@ -13,7 +13,7 @@ import com.example.todo.persistence.PersistenceProviderImpl;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainView {
 
     private MainPresenter mainPresenter;
     private ToDoListAdapter toDosAdapter;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainPresenter = new MainPresenter(new Persistence(new PersistenceProviderImpl()));
+        mainPresenter = new MainPresenter(this, new Persistence(new PersistenceProviderImpl()));
 
         List<ToDo> savedToDos = mainPresenter.fetchList(this);
 
@@ -45,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private void handleAddToDoButtonClick() {
         ToDo newToDo = new ToDo(addToDoEditText.getText().toString());
         mainPresenter.addToDo(this, newToDo);
+    }
 
+    @Override
+    public void refreshToDos() {
         List<ToDo> savedToDos = mainPresenter.fetchList(this);
         toDosAdapter.setData(savedToDos);
         toDosAdapter.notifyDataSetChanged();

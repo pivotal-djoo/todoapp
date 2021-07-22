@@ -19,11 +19,13 @@ public class MainPresenterTest {
 
     private MainPresenter subject;
     private Persistence mockPersistence;
+    private MainView mockMainView;
 
     @Before
     public void setUp() {
         mockPersistence = mock(Persistence.class);
-        subject = new MainPresenter(mockPersistence);
+        mockMainView = mock(MainView.class);
+        subject = new MainPresenter(mockMainView, mockPersistence);
     }
 
     @Test
@@ -47,5 +49,6 @@ public class MainPresenterTest {
         subject.addToDo(null, catFood);
 
        verify(mockPersistence).addToDo(null, catFood);
+       verify(mockMainView).refreshToDos();
     }
 }

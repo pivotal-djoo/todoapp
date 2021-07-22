@@ -8,9 +8,11 @@ import com.example.todo.persistence.Persistence;
 import java.util.List;
 
 public class MainPresenter {
+    private MainView mainView;
     private Persistence persistence;
 
-    public MainPresenter(Persistence persistence) {
+    public MainPresenter(MainView mainView, Persistence persistence) {
+        this.mainView = mainView;
         this.persistence = persistence;
     }
 
@@ -20,5 +22,6 @@ public class MainPresenter {
 
     public void addToDo(Context context, ToDo newItem) {
         persistence.addToDo(context, newItem);
+        mainView.refreshToDos();
     }
 }
