@@ -24,4 +24,8 @@ public class MainPresenter {
         persistence.addToDo(context, newItem);
         view.refreshToDos();
     }
+
+    public void checkToDo(Context context, ToDo catFood) {
+
+    }
 }

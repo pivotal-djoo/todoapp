@@ -42,4 +42,8 @@ public class Persistence {
         String serializedToDos = gson.toJson(currentTodos);
         persistenceProvider.storeString(context, "todos", serializedToDos);
     }
+
+    public void updateToDo(Object o, ToDo catFood) {
+
+    }
 }
