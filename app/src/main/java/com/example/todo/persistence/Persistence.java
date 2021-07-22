@@ -43,7 +43,39 @@ public class Persistence {
         persistenceProvider.storeString(context, "todos", serializedToDos);
     }
 
-    public void updateToDo(Object o, ToDo catFood) {
+    public void updateToDo(Context context, ToDo toDo) {
+        String serializedCurrentToDos = persistenceProvider.getString(context, "todos");
+        if (serializedCurrentToDos != null && !serializedCurrentToDos.isEmpty()) {
+            List<ToDo> currentTodos = gson.fromJson(serializedCurrentToDos, typeToken);
+            int index = getIndex(toDo, currentTodos);
+            if (index >= 0) {
+                currentTodos.set(index, toDo);
+            }
+            String serializedToDos = gson.toJson(currentTodos);
+            persistenceProvider.storeString(context, "todos", serializedToDos);
+        }
+    }
 
+    public void deleteToDo(Context context, ToDo toDo) {
+        String serializedCurrentToDos = persistenceProvider.getString(context, "todos");
+        if (serializedCurrentToDos != null && !serializedCurrentToDos.isEmpty()) {
+            List<ToDo> currentTodos = gson.fromJson(serializedCurrentToDos, typeToken);
+            int index = getIndex(toDo, currentTodos);
+            if (index >= 0) {
+                currentTodos.remove(index);
+            }
+            String serializedToDos = gson.toJson(currentTodos);
+            persistenceProvider.storeString(context, "todos", serializedToDos);
+        }
+    }
+
+    private int getIndex(ToDo toDo, List<ToDo> currentTodos) {
+        int index = -1;
+        for (int i = 0; i < currentTodos.size(); i++) {
+            if (currentTodos.get(i).getText().equals(toDo.getText())) {
+                index = i;
+            }
+        }
+        return index;
     }
 }

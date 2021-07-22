@@ -58,9 +58,20 @@ public class MainPresenterTest {
 
         subject.checkToDo(null, catFood);
 
-        catFood.setChecked(true);
+        ToDo expectedCatFood = new ToDo("Pick up cat food");
+        expectedCatFood.setChecked(true);
 
-        verify(mockPersistence).updateToDo(null, catFood);
-//        verify(mockMainView).refreshToDos();
+        verify(mockPersistence).updateToDo(null, expectedCatFood);
+        verify(mockMainView).refreshToDos();
+    }
+
+    @Test
+    public void deleteTodo_shouldRemoveToDoAndRefreshView() {
+        ToDo catFood = new ToDo("Pick up cat food");
+
+        subject.deleteToDo(null, catFood);
+
+        verify(mockPersistence).deleteToDo(null, catFood);
+        verify(mockMainView).refreshToDos();
     }
 }

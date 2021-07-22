@@ -53,7 +53,7 @@ public class PersistenceTest {
                 .storeString(
                         null,
                         "todos",
-                        "[{\"text\":\"Pick up pickles\"},{\"text\":\"Pick up kids\"}]");
+                        "[{\"text\":\"Pick up pickles\",\"checked\":false},{\"text\":\"Pick up kids\",\"checked\":false}]");
     }
 
     @Test
@@ -64,6 +64,42 @@ public class PersistenceTest {
                 .storeString(
                         null,
                         "todos",
-                        "[{\"text\":\"Pick up kids\"}]");
+                        "[{\"text\":\"Pick up kids\",\"checked\":false}]");
+    }
+
+    @Test
+    public void updateToDo_updatesItemInPlace() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up pickles\", \"checked\": false}]");
+
+        ToDo donePickles = new ToDo("Pick up pickles");
+        donePickles.setChecked(true);
+
+        subject.updateToDo(null, donePickles);
+
+        verify(mockProvider)
+                .storeString(
+                        null,
+                        "todos",
+                        "[{\"text\":\"Pick up pickles\",\"checked\":true}]"
+                );
+    }
+
+    @Test
+    public void deleteToDo_removesItemFromList() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up pickles\", \"checked\": false}]");
+
+        ToDo deletedPickles = new ToDo("Pick up pickles");
+
+        subject.deleteToDo(null, deletedPickles);
+
+        verify(mockProvider)
+                .storeString(
+                        null,
+                        "todos",
+                        "[]"
+                );
+
     }
 }

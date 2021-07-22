@@ -25,7 +25,14 @@ public class MainPresenter {
         view.refreshToDos();
     }
 
-    public void checkToDo(Context context, ToDo catFood) {
+    public void checkToDo(Context context, ToDo toDo) {
+        toDo.setChecked(true);
+        persistence.updateToDo(context, toDo);
+        view.refreshToDos();
+    }
 
+    public void deleteToDo(Context context, ToDo toDo) {
+        persistence.deleteToDo(context, toDo);
+        view.refreshToDos();
     }
 }
