@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -13,7 +14,7 @@ import com.example.todo.persistence.PersistenceProviderImpl;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, ToDoListAdapter.Callback {
 
     private MainPresenter mainPresenter;
     private ToDoListAdapter toDosAdapter;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         List<ToDo> savedToDos = mainPresenter.fetchList(this);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        toDosAdapter = new ToDoListAdapter();
+        toDosAdapter = new ToDoListAdapter(this);
         toDosAdapter.setData(savedToDos);
         recyclerView.setAdapter(toDosAdapter);
 
@@ -38,16 +39,26 @@ public class MainActivity extends AppCompatActivity implements MainView {
         addToDoButton.setOnClickListener(button -> handleAddToDoButtonClick());
     }
 
-    private void handleAddToDoButtonClick() {
-        ToDo newToDo = new ToDo(addToDoEditText.getText().toString());
-        mainPresenter.addToDo(this, newToDo);
-    }
-
     @Override
     public void refreshToDos() {
         List<ToDo> savedToDos = mainPresenter.fetchList(this);
         toDosAdapter.setData(savedToDos);
         toDosAdapter.notifyDataSetChanged();
         addToDoEditText.getText().clear();
+    }
+
+    @Override
+    public void deleteTapped(ToDo todo) {
+        Log.d("MainActivity", "######### delete tapped");
+    }
+
+    @Override
+    public void checkboxTapped(ToDo toDo, boolean checked) {
+        Log.d("MainActivity", "######### checkbox checked: " + checked);
+    }
+
+    private void handleAddToDoButtonClick() {
+        ToDo newToDo = new ToDo(addToDoEditText.getText().toString());
+        mainPresenter.addToDo(this, newToDo);
     }
 }

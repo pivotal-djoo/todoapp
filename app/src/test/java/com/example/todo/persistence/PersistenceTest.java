@@ -53,7 +53,7 @@ public class PersistenceTest {
                 .storeString(
                         null,
                         "todos",
-                        "[{\"text\":\"Pick up pickles\"},{\"text\":\"Pick up kids\"}]");
+                        "[{\"text\":\"Pick up pickles\",\"checked\":false},{\"text\":\"Pick up kids\",\"checked\":false}]");
     }
 
     @Test
@@ -64,6 +64,6 @@ public class PersistenceTest {
                 .storeString(
                         null,
                         "todos",
-                        "[{\"text\":\"Pick up kids\"}]");
+                        "[{\"text\":\"Pick up kids\",\"checked\":false}]");
     }
 }
