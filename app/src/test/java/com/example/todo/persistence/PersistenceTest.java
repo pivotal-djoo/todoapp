@@ -36,7 +36,7 @@ public class PersistenceTest {
     @Test
     public void getSavedToDos_noSavedToDos_returnsEmptyList() {
         when(mockProvider.getString(null, "todos"))
-                .thenReturn(null);
+                .thenReturn("[]");
 
         assertThat(subject.getSavedTodos(null))
                 .isEqualTo(emptyList());
@@ -58,6 +58,9 @@ public class PersistenceTest {
 
     @Test
     public void addToDo_noSavedToDos() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[]");
+
         subject.addToDo(null, new ToDo("Pick up kids"));
 
         verify(mockProvider)
@@ -65,5 +68,71 @@ public class PersistenceTest {
                         null,
                         "todos",
                         "[{\"text\":\"Pick up kids\",\"checked\":false}]");
+    }
+
+    @Test
+    public void updateToDo_modifiesStoredList() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up pickles\"}]");
+
+        ToDo pickles = new ToDo("Pick up pickles");
+        pickles.setChecked(true);
+        subject.updateToDo(null, pickles);
+
+        verify(mockProvider)
+                .storeString(
+                        null,
+                        "todos",
+                        "[{\"text\":\"Pick up pickles\",\"checked\":true}]");
+
+    }
+
+    @Test
+    public void updateToDo_toDoItemNotFound() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up kids\"}]");
+
+        ToDo pickles = new ToDo("Pick up pickles");
+        pickles.setChecked(true);
+        subject.updateToDo(null, pickles);
+
+        verify(mockProvider)
+                .storeString(
+                        null,
+                        "todos",
+                        "[{\"text\":\"Pick up kids\",\"checked\":false},{\"text\":\"Pick up pickles\",\"checked\":true}]");
+    }
+
+    @Test
+    public void deleteToDo_removesItemFromList() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up pickles\"}]");
+
+        ToDo pickles = new ToDo("Pick up pickles");
+        subject.deleteToDo(null, pickles);
+
+        verify(mockProvider).storeString(null, "todos", "[]");
+    }
+
+    @Test
+    public void deleteToDo_todoDoesNotExist_doesnotRemoveAnyItemsInTheList() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[{\"text\":\"Pick up pickles\"}]");
+
+        ToDo pickles = new ToDo("Pick up dill");
+        subject.deleteToDo(null, pickles);
+
+        verify(mockProvider).storeString(null, "todos", "[{\"text\":\"Pick up pickles\",\"checked\":false}]");
+    }
+
+    @Test
+    public void deleteToDo_withNoPreviouslySavedToDos_doesnotRemoveAnyItemsInTheList() {
+        when(mockProvider.getString(null, "todos"))
+                .thenReturn("[]");
+
+        ToDo pickles = new ToDo("Pick up dill");
+        subject.deleteToDo(null, pickles);
+
+        verify(mockProvider).storeString(null, "todos", "[]");
     }
 }

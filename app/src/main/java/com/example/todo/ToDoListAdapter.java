@@ -68,6 +68,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         viewHolder.getTextView().setText(toDo.getText());
         viewHolder.getDeleteImageView()
                 .setOnClickListener(v -> callback.deleteTapped(toDo));
+        viewHolder.getCheckBox().setChecked(toDo.isChecked());
         viewHolder.getCheckBox()
                 .setOnCheckedChangeListener((buttonView, isChecked) -> callback.checkboxTapped(toDo, isChecked));
     }

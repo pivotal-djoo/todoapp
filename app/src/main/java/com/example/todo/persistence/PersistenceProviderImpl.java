@@ -9,7 +9,7 @@ public class PersistenceProviderImpl implements PersistenceProvider {
     @Override
     public String getString(Context context, String name) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        return sharedPreferences.getString(name, null);
+        return sharedPreferences.getString(name, "[]");
     }
 
     @Override

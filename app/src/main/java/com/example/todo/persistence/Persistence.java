@@ -25,21 +25,45 @@ public class Persistence {
 
     public List<ToDo> getSavedTodos(Context context) {
         String serializedToDos = persistenceProvider.getString(context, "todos");
-
-        if (serializedToDos == null) {
-            return emptyList();
-        }
         return gson.fromJson(serializedToDos, typeToken);
     }
 
     public void addToDo(Context context, ToDo newToDo) {
-        String serializedCurrentToDos = persistenceProvider.getString(context, "todos");
-        List<ToDo> currentTodos = new ArrayList<>();
-        if (serializedCurrentToDos != null && !serializedCurrentToDos.isEmpty()) {
-            currentTodos.addAll(gson.fromJson(serializedCurrentToDos, typeToken));
-        }
+        List<ToDo> currentTodos = getSavedTodos(context);
         currentTodos.add(newToDo);
         String serializedToDos = gson.toJson(currentTodos);
         persistenceProvider.storeString(context, "todos", serializedToDos);
+    }
+
+    public void updateToDo(Context context, ToDo toDo) {
+        List<ToDo> currentTodos = getSavedTodos(context);
+        int index = getIndex(toDo, currentTodos);
+        if (index >= 0) {
+            currentTodos.set(index, toDo);
+        } else {
+            currentTodos.add(toDo);
+        }
+        String serializedToDos = gson.toJson(currentTodos);
+        persistenceProvider.storeString(context, "todos", serializedToDos);
+    }
+
+    public void deleteToDo(Context context, ToDo toDo) {
+        List<ToDo> currentTodos = getSavedTodos(context);
+        int index = getIndex(toDo, currentTodos);
+        if (index >= 0) {
+            currentTodos.remove(index);
+        }
+        String serializedToDos = gson.toJson(currentTodos);
+        persistenceProvider.storeString(context, "todos", serializedToDos);
+    }
+
+    private int getIndex(ToDo toDo, List<ToDo> currentTodos) {
+        int index = -1;
+        for (int i = 0; i < currentTodos.size(); i++) {
+            if (currentTodos.get(i).getText().equals(toDo.getText())) {
+                index = i;
+            }
+        }
+        return index;
     }
 }

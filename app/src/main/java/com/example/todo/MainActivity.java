@@ -50,11 +50,13 @@ public class MainActivity extends AppCompatActivity implements MainView, ToDoLis
     @Override
     public void deleteTapped(ToDo todo) {
         Log.d("MainActivity", "######### delete tapped");
+        mainPresenter.deleteToDo(this, todo);
     }
 
     @Override
     public void checkboxTapped(ToDo toDo, boolean checked) {
         Log.d("MainActivity", "######### checkbox checked: " + checked);
+        mainPresenter.checkToDo(this, toDo);
     }
 
     private void handleAddToDoButtonClick() {
