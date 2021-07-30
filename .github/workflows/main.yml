@@ -1,0 +1,22 @@
+name: Main
+
+on:
+  push:
+    branches: [ master, github_actions ]
+  pull_request:
+    branches: [ master github_actions ]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew jacocoTestReport
