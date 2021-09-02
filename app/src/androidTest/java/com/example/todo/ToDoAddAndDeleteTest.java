@@ -133,9 +133,9 @@ public class ToDoAddAndDeleteTest {
                                 childAtPosition(
                                         childAtPosition(
                                                 withClassName(is("com.google.android.material.card.MaterialCardView")),
-                                                5),
-                                        5),
-                                5),
+                                                0),
+                                        2),
+                                2),
                         isDisplayed()));
         appCompatImageView.perform(click());
     }
