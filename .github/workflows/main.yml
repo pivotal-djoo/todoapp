@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, github_actions ]
   pull_request:
-    branches: [ master github_actions ]
+    branches: [ master, github_actions ]
 
   workflow_dispatch:
 
@@ -12,11 +12,24 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: run tests
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Run Server Tests
+        run: cd todo-server && ./gradlew test
+
+      - name: Run Server In Background
+        run: cd todo-server && ./gradlew bootRun &
+
+      - name: Run Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew jacocoTestReport
+          script: cd todo-android && ./gradlew jacocoTestReport
+
